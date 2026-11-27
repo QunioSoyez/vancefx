@@ -1,0 +1,57 @@
+---
+import Base from '../../layouts/Base.astro';
+import { PRODUCTS, MAX_QTY, formatUSD } from '../../data/products.js';
+
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { id: p.id }, props: { product: p } }));
+}
+const { product } = Astro.props;
+---
+<Base title={product.short} description={`${product.name}. ${product.tagline}`} image={product.image}>
+  <section class="product wrap">
+    <img src={product.image} alt={product.imageAlt} width="600" height="800" />
+    <div>
+      <p class="eyebrow">VanceFX</p>
+      <h1 class="display chrome">{product.short}</h1>
+      <p class="tagline">{product.tagline}</p>
+      <p class="blurb">{product.blurb}</p>
+      <p class="price">{formatUSD(product.priceCents)}</p>
+
+      {product.available ? (
+        <div class="buy" data-buy data-id={product.id} data-max={MAX_QTY}>
+          <div class="qty">
+            <button type="button" data-step="-1" aria-label="Decrease quantity">&minus;</button>
+            <output data-qty>1</output>
+            <button type="button" data-step="1" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="btn" type="button" data-add>Add to cart</button>
+          <a class="btn btn-ghost" href="/cart">View cart</a>
+        </div>
+      ) : (
+        <p class="buy"><strong>Sold out.</strong></p>
+      )}
+
+      <p class="note">Novelty item. Not intended for cosmetic use. See the label on the back of the product.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { addToCart, toast } from '../../scripts/cart.js';
+  const buy = document.querySelector<HTMLElement>('[data-buy]');
+  if (buy) {
+    const out = buy.querySelector<HTMLOutputElement>('[data-qty]')!;
+    const max = Number(buy.dataset.max);
+    let qty = 1;
+    buy.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) =>
+      b.addEventListener('click', () => {
+        qty = Math.min(max, Math.max(1, qty + Number(b.dataset.step)));
+        out.textContent = String(qty);
+      })
+    );
+    buy.querySelector('[data-add]')!.addEventListener('click', () => {
+      addToCart(buy.dataset.id!, qty);
+      toast(`Added ${qty} to cart`);
+    });
+  }
+</script>

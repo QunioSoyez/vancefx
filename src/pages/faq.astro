@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+import { SHIPPING } from '../data/shipping.js';
+import { formatUSD } from '../data/products.js';
+
+// DRAFT answers. Edit freely.
+const faqs = [
+  {
+    q: 'What is VanceFX?',
+    a: 'VanceFX is a parody line of grooming products for men. Think of it as a gag gift with commitment: real packaging, real presence, real confidence.',
+  },
+  {
+    q: 'Is this real makeup?',
+    a: 'The product inside is a real cosmetic with a VanceFX label applied. It is sold as a novelty item and is not intended for cosmetic use. Please read the label on the back before doing anything brave.',
+  },
+  {
+    q: 'Is VanceFX affiliated with or endorsed by anyone?',
+    a: 'No. VanceFX is parody. It is not affiliated with, sponsored by, or endorsed by any person, public figure, or cosmetics brand.',
+  },
+  {
+    q: 'How much is shipping?',
+    a: `${formatUSD(SHIPPING.flatCents)} flat on orders up to ${formatUSD(SHIPPING.freeOverCents)}. Orders over ${formatUSD(SHIPPING.freeOverCents)} ship free in the continental US. Alaska and Hawaii add ${formatUSD(SHIPPING.remoteSurchargeCents)}.`,
+  },
+  {
+    q: 'Where do you ship?',
+    a: 'Anywhere in the United States: the continental US, Alaska and Hawaii. We do not ship internationally or to US territories right now.',
+  },
+  {
+    q: 'When will my order ship?',
+    a: `Every order is packed by hand and ships from ${SITE.shipFrom} within ${SITE.shipWithin}.`,
+  },
+  {
+    q: 'Can I return or exchange my order?',
+    a: `Because these are cosmetic products, we can't take back opened items. If your order arrives damaged or wrong, email ${SITE.contactEmail} within 14 days with a photo and we'll make it right.`,
+  },
+  {
+    q: 'Is checkout secure?',
+    a: 'Yes. Payment is handled by Stripe on their secure checkout page. We never see or store your card number.',
+  },
+  {
+    q: 'How do I contact you?',
+    a: `Email ${SITE.contactEmail}. We read every message.`,
+  },
+];
+---
+<Base title="FAQ" description="Shipping, returns and other questions about VanceFX.">
+  <div class="wrap">
+    <h1 class="page-title display chrome">FAQ</h1>
+    <section class="faq">
+      {faqs.map((f, i) => (
+        <details open={i === 0}>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </section>
+  </div>
+</Base>

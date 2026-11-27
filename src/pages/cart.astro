@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import { REGIONS, SHIPPING } from '../data/shipping.js';
+import { formatUSD } from '../data/products.js';
+---
+<Base title="Cart">
+  <div class="wrap">
+    <h1 class="page-title display chrome">Your cart</h1>
+    <div data-cart-root>
+      <div class="cart">
+        <div class="cart-lines" data-lines></div>
+        <aside class="summary">
+          <h2 class="display">Summary</h2>
+          <label for="region">Shipping to</label>
+          <select id="region" data-region>
+            {Object.entries(REGIONS).map(([v, label]) => <option value={v}>{label}</option>)}
+          </select>
+          <div class="row"><span>Subtotal</span><span data-subtotal>$0.00</span></div>
+          <div class="row"><span>Shipping</span><span data-shipping>$0.00</span></div>
+          <div class="row total"><span>Total</span><span data-total>$0.00</span></div>
+          <button class="btn" type="button" data-checkout>Checkout</button>
+          <p class="error" data-error hidden></p>
+          <p class="small">
+            {formatUSD(SHIPPING.flatCents)} flat shipping, free on orders over {formatUSD(SHIPPING.freeOverCents)}.
+            Alaska and Hawaii add {formatUSD(SHIPPING.remoteSurchargeCents)}. US only. Sales tax, if any, is added at checkout.
+          </p>
+        </aside>
+      </div>
+    </div>
+    <div class="empty" data-empty hidden>
+      <p>Your cart is empty.</p>
+      <a class="btn" href="/#shop">Shop the line</a>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { loadCart, saveCart, setQty, cartLines } from '../scripts/cart.js';
+  import { formatUSD, MAX_QTY } from '../data/products.js';
+  import { shippingCents } from '../data/shipping.js';
+
+  const root = document.querySelector<HTMLElement>('[data-cart-root]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const linesEl = document.querySelector<HTMLElement>('[data-lines]')!;
+  const regionEl = document.querySelector<HTMLSelectElement>('[data-region]')!;
+  const errorEl = document.querySelector<HTMLElement>('[data-error]')!;
+  const checkoutBtn = document.querySelector<HTMLButtonElement>('[data-checkout]')!;
+
+  function render() {
+    const cart = loadCart();
+    const lines = cartLines(cart);
+    const isEmpty = lines.length === 0;
+    root.hidden = isEmpty;
+    empty.hidden = !isEmpty;
+    if (isEmpty) return;
+
+    regionEl.value = cart.region;
+    linesEl.innerHTML = '';
+    for (const { product, qty } of lines) {
+      const row = document.createElement('div');
+      row.className = 'line';
+      row.innerHTML = `
+        <img src="${product.image}" alt="" />
+        <div>
+          <h3></h3>
+          <div class="controls">
+            <div class="qty">
+              <button type="button" data-step="-1" aria-label="Decrease quantity">&minus;</button>
+              <output>${qty}</output>
+              <button type="button" data-step="1" aria-label="Increase quantity" ${qty >= MAX_QTY ? 'disabled' : ''}>+</button>
+            </div>
+            <button type="button" class="link-btn" data-remove>Remove</button>
+          </div>
+        </div>
+        <strong>${formatUSD(product.priceCents * qty)}</strong>`;
+      row.querySelector('h3')!.textContent = product.name;
+      row.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) =>
+        b.addEventListener('click', () => { setQty(product.id, qty + Number(b.dataset.step)); render(); })
+      );
+      row.querySelector('[data-remove]')!.addEventListener('click', () => { setQty(product.id, 0); render(); });
+      linesEl.appendChild(row);
+    }
+
+    const subtotal = lines.reduce((s, l) => s + l.product.priceCents * l.qty, 0);
+    const ship = shippingCents(subtotal, cart.region);
+    document.querySelector('[data-subtotal]')!.textContent = formatUSD(subtotal);
+    document.querySelector('[data-shipping]')!.textContent = ship === 0 ? 'Free' : formatUSD(ship);
+    document.querySelector('[data-total]')!.textContent = formatUSD(subtotal + ship);
+  }
+
+  regionEl.addEventListener('change', () => {
+    const cart = loadCart();
+    cart.region = regionEl.value;
+    saveCart(cart);
+    render();
+  });
+
+  checkoutBtn.addEventListener('click', async () => {
+    errorEl.hidden = true;
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = 'Starting checkout...';
+    try {
+      const cart = loadCart();
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          region: cart.region,
+          items: Object.entries(cart.items).map(([id, qty]) => ({ id, qty })),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) throw new Error(data.error || 'Could not start checkout.');
+      window.location.href = data.url;
+    } catch (err) {
+      errorEl.textContent = (err as Error).message;
+      errorEl.hidden = false;
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = 'Checkout';
+    }
+  });
+
+  window.addEventListener('pageshow', render); // re-render when coming back from Stripe
+  render();
+</script>

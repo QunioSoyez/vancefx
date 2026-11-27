@@ -1,0 +1,64 @@
+---
+import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/700.css';
+import '@fontsource/oswald/600.css';
+import '../styles/global.css';
+import { SITE } from '../data/site.js';
+
+interface Props { title?: string; description?: string; image?: string; }
+const { title, description = 'VanceFX. Grooming effects for men. Parody and novelty products.', image = '/img/poster-eyeliner.jpg' } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | Eyeliner and Mascara for Men`;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = (href: string) => (path === href || (href !== '/' && path.startsWith(href)) ? 'page' : undefined);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b0e12" />
+    <link rel="icon" type="image/png" href="/img/eyeliner-pen.png" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, SITE.url).href} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/" aria-label="VanceFX home"><img src="/img/logo-white.png" alt="VanceFX" width="136" height="34" /></a>
+        <nav class="nav">
+          <a href="/#shop" aria-current={current('/products')}>Shop</a>
+          <a href="/faq" aria-current={current('/faq')}>FAQ</a>
+          <a class="cart-link" href="/cart" aria-current={current('/cart')}>Cart <span class="cart-count" data-cart-count data-empty="true">0</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav>
+          <a href="/#shop">Shop</a>
+          <a href="/faq">FAQ</a>
+          <a href="/cart">Cart</a>
+          <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+        </nav>
+        <p class="disclaimer">{SITE.disclaimer}</p>
+        <p>&copy; {new Date().getFullYear()} {SITE.name}. Ships from {SITE.shipFrom}. Payments by Stripe.</p>
+      </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+    <script>
+      import { updateCartCount } from '../scripts/cart.js';
+      updateCartCount();
+    </script>
+  </body>
+</html>

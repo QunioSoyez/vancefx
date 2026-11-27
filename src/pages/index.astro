@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { PRODUCTS, formatUSD } from '../data/products.js';
+import { SHIPPING } from '../data/shipping.js';
+---
+<Base>
+  <section class="hero wrap">
+    <p class="eyebrow">Grooming effects for men</p>
+    <h1 class="display chrome">Bold. Defined.<br />Unapologetic.</h1>
+    <p>Eyeliner and mascara for the man who wants to be seen. Because confidence should be effortless.</p>
+    <a class="btn" href="#shop">Shop the line</a>
+  </section>
+
+  <section id="shop" class="wrap">
+    <div class="products">
+      {PRODUCTS.map((p) => (
+        <article class="card">
+          <a class="card-img" href={`/products/${p.id}`}><img src={p.image} alt={p.imageAlt} loading="lazy" width="600" height="800" /></a>
+          <div class="card-body">
+            <h3 class="display chrome">{p.short}</h3>
+            <p class="tag">{p.tagline}</p>
+            <div class="card-foot">
+              <span class="price">{formatUSD(p.priceCents)}</span>
+              <a class="btn btn-ghost" href={`/products/${p.id}`}>View</a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="strip">
+    <div class="wrap">
+      <h2 class="display chrome">Upgrade your gaze</h2>
+      <p>{formatUSD(SHIPPING.flatCents)} flat shipping. Free on orders over {formatUSD(SHIPPING.freeOverCents)} in the continental US.</p>
+    </div>
+  </section>
+</Base>

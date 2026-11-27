@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+---
+<Base title="Thank you">
+  <section class="hero wrap">
+    <p class="eyebrow">Order received</p>
+    <h1 class="display chrome">Thank you</h1>
+    <p>Your receipt is on its way to your email. Orders ship from {SITE.shipFrom} within {SITE.shipWithin}.
+       Questions? Email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.</p>
+    <a class="btn" href="/">Back to the shop</a>
+  </section>
+</Base>
+
+<script>
+  import { clearCart } from '../scripts/cart.js';
+  if (new URLSearchParams(location.search).has('session_id')) clearCart();
+</script>

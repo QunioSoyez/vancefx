@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: 'How much is shipping?',
-    a: `${formatUSD(SHIPPING.flatCents)} flat on orders up to ${formatUSD(SHIPPING.freeOverCents)}. Orders over ${formatUSD(SHIPPING.freeOverCents)} ship free in the continental US. Alaska and Hawaii add ${formatUSD(SHIPPING.remoteSurchargeCents)}.`,
+    a: `${formatUSD(SHIPPING.flatCents)} flat on orders under ${formatUSD(SHIPPING.freeAtCents)}. Orders of ${formatUSD(SHIPPING.freeAtCents)} or more ship free in the continental US. Alaska and Hawaii add ${formatUSD(SHIPPING.remoteSurchargeCents)}.`,
   },
   {
     q: 'Where do you ship?',

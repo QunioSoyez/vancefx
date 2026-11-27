@@ -35,6 +35,6 @@ npm run preview   # build + Worker, http://localhost:8787 (checkout works with a
 
 ## Shipping rules
 
-- $8 flat for subtotals up to $50; free when the subtotal is over $50.
+- $8 flat for subtotals under $50; free at $50 and up.
 - Alaska / Hawaii add $5 (also on free-shipping orders; see `remoteSurchargeOnFree`).
 - The customer picks the region on the cart page. Stripe only collects US addresses but can't check the state, so check AK/HI addresses on each order.

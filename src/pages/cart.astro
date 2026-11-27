@@ -21,7 +21,7 @@ import { formatUSD } from '../data/products.js';
           <button class="btn" type="button" data-checkout>Checkout</button>
           <p class="error" data-error hidden></p>
           <p class="small">
-            {formatUSD(SHIPPING.flatCents)} flat shipping, free on orders over {formatUSD(SHIPPING.freeOverCents)}.
+            {formatUSD(SHIPPING.flatCents)} flat shipping, free on orders of {formatUSD(SHIPPING.freeAtCents)} or more.
             Alaska and Hawaii add {formatUSD(SHIPPING.remoteSurchargeCents)}. US only. Sales tax, if any, is added at checkout.
           </p>
         </aside>

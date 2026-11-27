@@ -6,7 +6,7 @@ import '../styles/global.css';
 import { SITE } from '../data/site.js';
 
 interface Props { title?: string; description?: string; image?: string; }
-const { title, description = 'VanceFX. Grooming effects for men. Parody and novelty products.', image = '/img/poster-eyeliner.jpg' } = Astro.props;
+const { title, description = 'VanceFX. Grooming effects for men. Parody and novelty products.', image = '/img/eyeliner.png' } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | Eyeliner and Mascara for Men`;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const current = (href: string) => (path === href || (href !== '/' && path.startsWith(href)) ? 'page' : undefined);
@@ -19,7 +19,7 @@ const current = (href: string) => (path === href || (href !== '/' && path.starts
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0b0e12" />
-    <link rel="icon" type="image/png" href="/img/eyeliner-pen.png" />
+    <link rel="icon" type="image/png" href="/img/eyeliner.png" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, SITE.url).href} />

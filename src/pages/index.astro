@@ -15,7 +15,7 @@ import { SHIPPING } from '../data/shipping.js';
     <div class="products">
       {PRODUCTS.map((p) => (
         <article class="card">
-          <a class="card-img" href={`/products/${p.id}`}><img src={p.image} alt={p.imageAlt} loading="lazy" width="600" height="800" /></a>
+          <a class="card-img stage" href={`/products/${p.id}`}><img src={p.image} alt={p.imageAlt} loading="lazy" width="800" height="1000" /></a>
           <div class="card-body">
             <h3 class="display chrome">{p.short}</h3>
             <p class="tag">{p.tagline}</p>

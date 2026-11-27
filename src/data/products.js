@@ -8,8 +8,8 @@ export const PRODUCTS = [
     priceCents: 1000,
     tagline: 'Bold. Defined. Unapologetic.',
     blurb: 'Because confidence should be effortless. Upgrade your gaze.',
-    image: '/img/poster-eyeliner.jpg',
-    imageAlt: 'VanceFX Eyeliner for Men poster',
+    image: '/img/eyeliner.png',
+    imageAlt: 'VanceFX eyeliner pen with cap',
     available: true,
   },
   {
@@ -19,8 +19,8 @@ export const PRODUCTS = [
     priceCents: 1000,
     tagline: 'Defined. Natural. Invisible.',
     blurb: 'Upgrade your look. Elevate your confidence. The subtle power of natural eye definition, designed specifically for men.',
-    image: '/img/poster-mascara.jpg',
-    imageAlt: 'VanceFX The Mascara for Men poster',
+    image: '/img/mascara.png',
+    imageAlt: 'VanceFX mascara tube with wand',
     available: true,
   },
 ];

@@ -9,7 +9,7 @@ const { product } = Astro.props;
 ---
 <Base title={product.short} description={`${product.name}. ${product.tagline}`} image={product.image}>
   <section class="product wrap">
-    <img src={product.image} alt={product.imageAlt} width="600" height="800" />
+    <div class="stage stage-lg"><img src={product.image} alt={product.imageAlt} width="800" height="1000" /></div>
     <div>
       <p class="eyebrow">VanceFX</p>
       <h1 class="display chrome">{product.short}</h1>

@@ -12,7 +12,7 @@
   "dependencies": {
     "@fontsource/montserrat": "^5.0.0",
     "@fontsource/oswald": "^5.0.0",
-    "astro": "^5.0.0"
+    "astro": "^7.4.7"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
